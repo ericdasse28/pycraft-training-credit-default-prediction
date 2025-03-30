@@ -1,6 +1,6 @@
 # pycraft-training-credit-default-prediction
 
-## Exercice 1
+## Exercise 1
 
 With help of the documentation [here](https://packaging.python.org/en/latest/guides/writing-pyproject-toml), complete this exercice:
 
@@ -24,4 +24,37 @@ version = "0.1.0"
 | dvclive      | >=3.48.0       |
 | xgboost      | >=2.1.1,<2.2   |
 
-To learn more about how to write a `pyproject.toml` file [here](https://packaging.python.org/en/latest/guides/writing-pyproject-toml/)
+5. Add `pytest` as an optional dependency in a group named `dev`
+
+## Exercise 2
+
+1. Create a virtual environment and subsequently activate it
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+```
+
+2. Install pip-tools
+
+```bash
+python -m pip install pip-tools
+```
+
+3. Lock project dependencies and generate a requirements.txt from it
+
+```bash
+pip-compile -o requirements.txt pyproject.toml
+```
+
+4. Lock development dependencies
+
+```bash
+pip-compile --extra dev -o dev-requirements.txt pyproject.toml
+```
+
+5. Install both project and dev dependencies
+
+```bash
+pip-sync requirements.txt dev-requirements.txt
+```
