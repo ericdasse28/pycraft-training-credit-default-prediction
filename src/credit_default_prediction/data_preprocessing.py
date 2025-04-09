@@ -66,7 +66,6 @@ def handle_features_types(
 def preprocess_data(
     loan_data: pd.DataFrame,
 ) -> pd.DataFrame:
-
     preprocess_steps = [
         handle_missing_values,
         handle_outliers,

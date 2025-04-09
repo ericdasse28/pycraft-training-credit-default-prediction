@@ -73,5 +73,3 @@ def log_plots(model, X: pd.DataFrame, y: pd.Series):
         log_confusion_matrix(model, X, y, live)
         log_roc_curve(model, X, y, live)
         log_feature_importance_plot(model, live)
-
-
