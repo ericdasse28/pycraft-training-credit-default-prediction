@@ -1,65 +1,23 @@
 # pycraft-training-credit-default-prediction
 
-## Exercise 1: Writing a `pyproject.toml`
+## Exercise 1: Dependency management, linting and formatting with Poetry and Ruff
 
-With help of the documentation [here](https://packaging.python.org/en/latest/guides/writing-pyproject-toml), complete this exercice:
+1. Install [Poetry](https://python-poetry.org/docs/1.8#installing-with-pipx)
+2. In [pyproject.toml](./pyproject.toml), rewrite the dev dependency group as follows:
 
-1. Create a pyproject.toml file
-2. Declare `setuptools` as your build backend. Learn how [here](https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#declaring-the-build-backend)
-3. Declare basic project metadata:
+   ```toml
+   [tool.poetry.group.dev.dependencies]
+   pytest = "^8.3.5"
+   pytest-mock = "^3.14.0"
+   ```
 
-```toml
-[project]
-name = "credit-default-prediction"
-version = "0.1.0"
-```
+   This ensures Poetry can read the development dependency group
 
-4. Specify project dependencies:
-   In this part, you will list the dependencies below as part of your project and put a constraint on the versions as described:
-
-| Dependency   | Version        |
-| ------------ | -------------- |
-| scikit-learn | >=1.5.1,<1.6   |
-| dvc          | >=3.54.1,<3.55 |
-| dvclive      | >=3.48.0       |
-| xgboost      | >=2.1.1,<2.2   |
-
-5. Add `pytest` as an optional dependency in a group named `dev`
-
-## Exercise 2: Locking pyproject.toml dependencies with pip-tools
-
-1. Create a virtual environment and subsequently activate it
-
-```bash
-python -m venv .venv
-source .venv/bin/activate
-```
-
-2. Install pip-tools
-
-```bash
-python -m pip install pip-tools
-```
-
-3. Lock project dependencies and generate a requirements.txt from it
-
-```bash
-pip-compile -o requirements.txt pyproject.toml
-```
-
-4. Lock development dependencies
-
-```bash
-pip-compile --extra dev -o dev-requirements.txt pyproject.toml
-```
-
-5. Look inside requirements.txt, what do you notice?
-6. Same question for dev-requirements.txt
-
-## Exercise 3: Installing locked dependencies
-
-Install both project and dev dependencies
-
-```bash
-pip-sync requirements.txt dev-requirements.txt
-```
+3. Lock the current project dependencies using the command: `poetry lock`
+4. Create a virtual environment (if you didn't already)
+5. Install all the dependencies (main and dev) in that environment
+6. Add `ruff` to dev dependency group using: `poetry add -G dev ruff`
+7. Is code format okay for Ruff? If not, apply ruff formatting on the entire codebase
+8. Is linting okay? If not, fix any issue you may encounter
+9. Configure your VS Code so that Ruff automatically formats Python files on save
+10. Run `pytest` to make sure all tests pass
