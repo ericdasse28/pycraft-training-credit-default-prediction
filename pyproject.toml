@@ -1,0 +1,22 @@
+[project]
+name = "credit-default-prediction"
+version = "0.1.0"
+requires-python = ">=3.10,<4"
+dependencies = [
+    "scikit-learn~=1.5.1",
+    "dvc~=3.54.1",
+    "dvclive~=3.48.0",
+    "xgboost~=2.1.1",
+    "pandas~=2.2.3",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest~=8.3.5",
+    "pytest-mock~=3.14.0"
+]
+
+
+[build-system]
+requires = ["setuptools >= 77.0.3"]
+build-backend = "setuptools.build_meta"
