@@ -23,6 +23,7 @@ version = "0.1.0"
 | dvc          | >=3.54.1,<3.55 |
 | dvclive      | >=3.48.0       |
 | xgboost      | >=2.1.1,<2.2   |
+| pandas       | >=2.2.3,<2.3   |
 
 5. Add `pytest` as an optional dependency in a group named `dev`
 
