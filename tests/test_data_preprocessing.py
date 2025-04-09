@@ -1,14 +1,11 @@
 import numpy as np
 import pandas as pd
 from pandas.api.types import is_integer_dtype
-from pytest_mock import MockerFixture
 
-from credit_default_prediction import preprocess_data as preprocess_module
-from credit_default_prediction.preprocess_data import (
+from credit_default_prediction.data_preprocessing import (
     handle_features_types,
     handle_missing_values,
     handle_outliers,
-    preprocess_data,
 )
 
 
@@ -20,7 +17,8 @@ def test_handle_missing_values_should_drop_rows_with_missing_loan_interests():
     loan_data = pd.DataFrame(
         {
             "loan_int_rate": [11.84, np.nan, 12.5, 7.14, np.nan],
-            "person_age": [20, 50, 18, 65, 19],"person_emp_length": [2, 15, 1.3, 20, 3]
+            "person_age": [20, 50, 18, 65, 19],
+            "person_emp_length": [2, 15, 1.3, 20, 3],
         }
     )
 
@@ -29,11 +27,15 @@ def test_handle_missing_values_should_drop_rows_with_missing_loan_interests():
     expected_clean_loan_data = pd.DataFrame(
         {
             "loan_int_rate": [11.84, 12.5, 7.14],
-        "person_age": [20, 18, 
-                       65],"person_emp_length": [2, 1.3, 20]},index=[0, 2, 3],
+            "person_age": [20, 18, 65],
+            "person_emp_length": [2, 1.3, 20],
+        },
+        index=[0, 2, 3],
     )
     pd.testing.assert_frame_equal(
-        actual_clean_loan_data,expected_clean_loan_data)
+        actual_clean_loan_data,
+        expected_clean_loan_data,
+    )
 
 
 def test_handle_missing_values_should_impute_missing_emp_length():
