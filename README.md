@@ -22,17 +22,19 @@ poetry install
 
 ## Exercise 2: Formatting and linting
 
-### Formatting with Black
+### Formatting with Black & isort
 
-1. Specify and install `black` as a dev dependency group as follows:
+1. Specify and install `black` and `isort` as dev dependencies group as follows:
 
 ```shell
-poetry add -G dev black
+poetry add -G dev black isort
 ```
 
 2. Is the codebase currently formatted according to Black style? If not, apply Black formatting on it
-3. Configure your VS Code so that Black automatically formats Python files on save
+3. Are the imports sorted currently sorted correctly?
+4. Configure your VS Code so that Black automatically formats Python files on save
    > **Tip**: Search the _Black Formatter_ extension in VS Code extensions tab
+5. Likewise, configure your VS Code so it uses isort.
 
 ### Linting with Flake8
 
@@ -48,7 +50,7 @@ exclude =
 ```
 
 This configuration tells Flake8 to ignore any file that's within your virtual environment
-or in `__pycache__`. 4. Run linting again. Did it detect any problem? If so, fix them! 5. Add the Flake8 extension to your VS Code
+or in `__pycache__`. 4. Run linting again. Did it detect any problem? 5. Add the Flake8 extension to your VS Code
 
 ### Bonus: sharing recommended VS Code extensions across team
 
@@ -61,5 +63,11 @@ control.
 
 1. Open the data preprocessing module: [credit_default_prediction/data_preprocessing.py](./credit_default_prediction/data_preprocessing.py)
 2. What do you notice?
-3. Run flake8 with a maximum complexity of 5 on it. Dit it succeed?
-4. Refactor the `preprocess` function inside of it.
+3. Refactor the `preprocess` function until it becomes more readable, and its McCabe complexity drops below 5.
+
+   The following Pandas resources will be of help:
+
+- [pandas.DataFrame.dropna](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.dropna.html)
+- [pandas.Series.clip](https://pandas.pydata.org/docs/reference/api/pandas.Series.clip.html#pandas.Series.clip)
+- [pandas.Series.map](https://pandas.pydata.org/docs/reference/api/pandas.Series.map.html#pandas.Series.map)
+- [pandas.Series.fillna](https://pandas.pydata.org/docs/reference/api/pandas.Series.fillna.html#pandas.Series.fillna)

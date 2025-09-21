@@ -1,84 +1,46 @@
 """Data preprocessing script."""
 
-import argparse
 
 import pandas as pd
+import argparse
 
-NORMAL_MAX_EMP_LENGTH = 60
+from sklearn.compose import ColumnTransformer
+import numpy as np
+def preprocess(df):
+    clean = df.copy()
+    # Remove rows where loan interest rates are not provided
+    bAdRows=[]
+    for i,row in clean.iterrows():
+        if row["loan_int_rate"]==None or row["loan_int_rate"]==np.nan:
+            bAdRows.append(i)
+    clean=clean.drop(bAdRows)
+    # Cap employment lengths at 60 years
+    outlier_filter = clean["person_emp_length"] > 60
+    indices= clean[outlier_filter].index
+    clean = clean.drop(index=indices)
+    # Cap income at 1 million
+    cap = 3_000_000 # former cap
+    for i,row in clean.iterrows():
+        if row["person_income"] > 1_000_000:
+            clean.at[i, "person_income"]=1_000_000
+    # Standardize education labels
+    for i, row in clean.iterrows():
+        if row["person_education"] in ["BELOW_SECONDARY", "Secondary"]:
+            clean.at[i, "person_education"] = "Secondary"
+        elif row["person_education"] in ["GRADUATE", "Graduate"]:
+            clean.at[i, "person_education"] = "Graduate"
+        elif row["person_education"] in ["POSTGRAD", "Post Graduate"]:
+            clean.at[i, "person_education"] = "Post Graduate"
+        else:
+            clean.at[i, "person_education"] = "Other"
+    # Turn CB default on file check into an integer
+    for i,row in clean.iterrows():
+        if row["cb_person_default_on_file"] == "Y":
+            clean.at[i, "cb_person_default_on_file"] = 1
+        elif row["cb_person_default_on_file"] == "N":
+            clean.at[i, "cb_person_default_on_file"] = 0
 
-
-def handle_missing_values(loan_data: pd.DataFrame) -> pd.DataFrame:
-    """Handle missing values with the credit applications data."""
-
-    # Drop rows with missing loan interest rates
-    clean_loan_data = loan_data.dropna(subset=["loan_int_rate"])
-
-    # Impute missing employment lengths
-    clean_loan_data = clean_loan_data.fillna(
-        {"person_emp_length": clean_loan_data["person_emp_length"].median()},
-    )
-
-    return clean_loan_data
-
-
-def _get_emp_length_outlier_indices(loan_data: pd.DataFrame) -> pd.Index:
-    """Returns indices of rows that contain outlier
-    employment lengths.
-
-    Here, an employment length is considered an outlier
-    if it exceeds 60 years old."""
-
-    EMP_LENGTH_THRESHOLD = 60
-
-    outlier_filter = loan_data["person_emp_length"] > EMP_LENGTH_THRESHOLD
-    indices = loan_data[outlier_filter].index
-
-    return indices
-
-
-def handle_outliers(loan_data: pd.DataFrame) -> pd.DataFrame:
-    """Handle outlier values within the loan applications data."""
-
-    # Drop rows with outlier employment lengths
-    indices = _get_emp_length_outlier_indices(loan_data)
-    clean_loan_data = loan_data.drop(index=indices)
-
-    return clean_loan_data
-
-
-def handle_features_types(
-    loan_data: pd.DataFrame,
-) -> pd.DataFrame:
-    """Makes sure the features in `loan_data`
-    have the right typing."""
-
-    # Turn cb_person_default_on_file into integer column
-    CB_DEFAULT_ON_FILE_COL = "cb_person_default_on_file"
-    clean_loan_data = loan_data.copy()
-
-    clean_loan_data[CB_DEFAULT_ON_FILE_COL] = clean_loan_data[
-        CB_DEFAULT_ON_FILE_COL
-    ].map({"Y": 1, "N": 0})
-
-    return clean_loan_data
-
-
-def preprocess_data(
-    loan_data: pd.DataFrame,
-) -> pd.DataFrame:
-
-    preprocess_steps = [
-        handle_missing_values,
-        handle_outliers,
-        handle_features_types,
-    ]
-    clean_loan_data = loan_data
-
-    for preprocess_step in preprocess_steps:
-        clean_loan_data = preprocess_step(clean_loan_data)
-
-    return clean_loan_data
-
+    return clean
 
 def _get_arguments():
     parser = argparse.ArgumentParser()
@@ -86,11 +48,9 @@ def _get_arguments():
     parser.add_argument("--preprocessed-data-path")
 
     return parser.parse_args()
-
-
 def main():
     args = _get_arguments()
 
     loan_data = pd.read_csv(args.raw_data_path)
-    loan_data = preprocess_data(loan_data)
+    loan_data = preprocess(loan_data)
     loan_data.to_csv(args.preprocessed_data_path, index=False)
