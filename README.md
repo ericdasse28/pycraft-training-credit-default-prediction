@@ -20,8 +20,6 @@ version = "0.1.0"
 | Dependency   | Version        |
 | ------------ | -------------- |
 | scikit-learn | >=1.5.1,<1.6   |
-| dvc          | >=3.54.1,<3.55 |
-| dvclive      | >=3.48.0       |
 | xgboost      | >=2.1.1,<2.2   |
 | pandas       | >=2.2.3,<2.3   |
 
