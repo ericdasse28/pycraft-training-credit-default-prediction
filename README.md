@@ -59,4 +59,7 @@ control.
 
 ## Exercise 3: refactoring
 
-1. Open the data preprocessing module at [./]
+1. Open the data preprocessing module: [credit_default_prediction/data_preprocessing.py](./credit_default_prediction/data_preprocessing.py)
+2. What do you notice?
+3. Run flake8 with a maximum complexity of 5 on it. Dit it succeed?
+4. Refactor the `preprocess` function inside of it.
