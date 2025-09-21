@@ -1,6 +1,6 @@
 # pycraft-training-credit-default-prediction
 
-## Exercice 1: Writing a `pyproject.toml`
+## Exercise 1: Writing a `pyproject.toml`
 
 With help of the documentation [here](https://packaging.python.org/en/latest/guides/writing-pyproject-toml), complete this exercice:
 
@@ -25,7 +25,7 @@ version = "0.1.0"
 
 5. Add `pytest` as an optional dependency in a group named `dev`
 
-## Exercice 2: Locking pyproject.toml dependencies with pip-tools
+## Exercise 2: Locking pyproject.toml dependencies with pip-tools
 
 1. Create a virtual environment and subsequently activate it
 
@@ -55,7 +55,7 @@ pip-compile --extra dev -o dev-requirements.txt pyproject.toml
 5. Look inside requirements.txt, what do you notice?
 6. Same question for dev-requirements.txt
 
-## Exercice 3: Installing locked dependencies
+## Exercise 3: Installing locked dependencies
 
 Install both project and dev dependencies
 
