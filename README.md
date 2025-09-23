@@ -2,7 +2,7 @@
 
 ## Exercise 1: Migration to Poetry for dependency management
 
-1. Install [Poetry](https://python-poetry.org/docs/1.8#installing-with-pipx)
+1. Install [Poetry](https://python-poetry.org/docs/1.8#installing-with-pipx) (/!\ IMPORTANT: install it outside of any virtual environment)
 2. In [pyproject.toml](./pyproject.toml), rewrite the dev dependency group as follows:
 
    ```toml
