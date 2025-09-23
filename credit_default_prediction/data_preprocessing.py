@@ -5,14 +5,20 @@ import argparse
 import pandas as pd
 
 
-def preprocess(df: pd.DataFrame):
-    clean = df.copy()
+def preprocess(loan_applications: pd.DataFrame) -> pd.DataFrame:
+    clean = loan_applications.copy()
+
     # Remove rows where loan interest rates are not provided
     clean = clean.dropna(subset=["loan_int_rate"])
-    # Cap employment lengths at 60 years
-    clean = clean[clean["person_emp_length"] <= 60]
+
+    # Drop employment lengths greater than 60 years
+    THRESHOLD_EMP_LENGTH = 60
+    clean = clean[clean["person_emp_length"] <= THRESHOLD_EMP_LENGTH]
+
     # Cap income at 1 million
-    clean["person_income"] = clean["person_income"].clip(upper=1_000_000)
+    CAP_INCOME = 1_000_000
+    clean["person_income"] = clean["person_income"].clip(upper=CAP_INCOME)
+
     # Standardize education labels
     education_standardizer = {
         "BELOW_SECONDARY": "Secondary",
@@ -22,6 +28,7 @@ def preprocess(df: pd.DataFrame):
     clean["person_education"] = (
         clean["person_education"].map(education_standardizer).fillna("Other")
     )
+
     # Turn CB default on file check into an integer
     clean["cb_person_default_on_file"] = clean["cb_person_default_on_file"].map(
         {"Y": 1, "N": 0}
