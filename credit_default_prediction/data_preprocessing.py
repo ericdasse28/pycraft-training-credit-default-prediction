@@ -4,79 +4,30 @@ import argparse
 
 import pandas as pd
 
-NORMAL_MAX_EMP_LENGTH = 60
 
-
-def handle_missing_values(loan_data: pd.DataFrame) -> pd.DataFrame:
-    """Handle missing values with the credit applications data."""
-
-    # Drop rows with missing loan interest rates
-    clean_loan_data = loan_data.dropna(subset=["loan_int_rate"])
-
-    # Impute missing employment lengths
-    clean_loan_data = clean_loan_data.fillna(
-        {"person_emp_length": clean_loan_data["person_emp_length"].median()},
+def preprocess(df: pd.DataFrame):
+    clean = df.copy()
+    # Remove rows where loan interest rates are not provided
+    clean = clean.dropna(subset=["loan_int_rate"])
+    # Cap employment lengths at 60 years
+    clean = clean[clean["person_emp_length"] <= 60]
+    # Cap income at 1 million
+    clean["person_income"] = clean["person_income"].clip(upper=1_000_000)
+    # Standardize education labels
+    education_standardizer = {
+        "BELOW_SECONDARY": "Secondary",
+        "GRADUATE": "Graduate",
+        "POSTGRAD": "Post Graduate",
+    }
+    clean["person_education"] = (
+        clean["person_education"].map(education_standardizer).fillna("Other")
+    )
+    # Turn CB default on file check into an integer
+    clean["cb_person_default_on_file"] = clean["cb_person_default_on_file"].map(
+        {"Y": 1, "N": 0}
     )
 
-    return clean_loan_data
-
-
-def _get_emp_length_outlier_indices(loan_data: pd.DataFrame) -> pd.Index:
-    """Returns indices of rows that contain outlier
-    employment lengths.
-
-    Here, an employment length is considered an outlier
-    if it exceeds 60 years old."""
-
-    EMP_LENGTH_THRESHOLD = 60
-
-    outlier_filter = loan_data["person_emp_length"] > EMP_LENGTH_THRESHOLD
-    indices = loan_data[outlier_filter].index
-
-    return indices
-
-
-def handle_outliers(loan_data: pd.DataFrame) -> pd.DataFrame:
-    """Handle outlier values within the loan applications data."""
-
-    # Drop rows with outlier employment lengths
-    indices = _get_emp_length_outlier_indices(loan_data)
-    clean_loan_data = loan_data.drop(index=indices)
-
-    return clean_loan_data
-
-
-def handle_features_types(
-    loan_data: pd.DataFrame,
-) -> pd.DataFrame:
-    """Makes sure the features in `loan_data`
-    have the right typing."""
-
-    # Turn cb_person_default_on_file into integer column
-    CB_DEFAULT_ON_FILE_COL = "cb_person_default_on_file"
-    clean_loan_data = loan_data.copy()
-
-    clean_loan_data[CB_DEFAULT_ON_FILE_COL] = clean_loan_data[
-        CB_DEFAULT_ON_FILE_COL
-    ].map({"Y": 1, "N": 0})
-
-    return clean_loan_data
-
-
-def preprocess_data(
-    loan_data: pd.DataFrame,
-) -> pd.DataFrame:
-    preprocess_steps = [
-        handle_missing_values,
-        handle_outliers,
-        handle_features_types,
-    ]
-    clean_loan_data = loan_data
-
-    for preprocess_step in preprocess_steps:
-        clean_loan_data = preprocess_step(clean_loan_data)
-
-    return clean_loan_data
+    return clean
 
 
 def _get_arguments():
@@ -91,5 +42,5 @@ def main():
     args = _get_arguments()
 
     loan_data = pd.read_csv(args.raw_data_path)
-    loan_data = preprocess_data(loan_data)
+    loan_data = preprocess(loan_data)
     loan_data.to_csv(args.preprocessed_data_path, index=False)

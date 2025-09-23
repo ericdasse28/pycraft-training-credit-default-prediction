@@ -11,6 +11,9 @@ black = "^25.9.0"
 isort = "^6.0.1"
 flake8 = "^7.3.0"
 
+[tool.isort]
+profile = "black"
+
 [build-system]
 requires = ["setuptools >= 77.0.3"]
 build-backend = "setuptools.build_meta"
