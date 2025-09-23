@@ -9,7 +9,16 @@ Write a test that represents the expected behavior of the pipeline.
 
 ## Exercise 2: Save dataset
 
-We have a module dedicated to handling datasets operations named [dataset.py](./src/credit_default_prediction/dataset.py). Implement a function that can save a dataset object to a specified file path with a TDD approach
+We need a method to save pre-processed dataset to a CSV file. To accomplish that,
+we decided that we need a function with the following behavior:
+
+1. Given a valid dataframe and a file path, said dataframe is saved to the file path
+   as CSV file.
+2. A dataframe is valid if its columns are
+   `person_age`, `loan_int_rate`, `person_emp_length`, `person_income`, `person_education`, `cb_person_default_on_file`, `loan_status`,
+   in that order. If a dataframe is not valid, raise a custom exception named `InvalidLoanColumnsException`
+
+Implement these behaviors with a TDD approach.
 
 ## Exercise 3: Incorporating Kedro
 
