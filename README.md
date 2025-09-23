@@ -20,11 +20,29 @@ we decided that we need a function with the following behavior:
 
 Implement these behaviors with a TDD approach.
 
-## Exercise 3: Incorporating Kedro
+## Exercise 3: Saving trained model to a model registry
 
-For the following, do not hesitate to check [Kedro documentation](https://docs.kedro.org/en/stable/)
+In [training_pipeline.py](./credit_default_prediction/training_pipeline.py), we defined a function
+that trains a model on input data and returns the trained model.
 
-### Turn project into Kedro project
+To properly manage our models lifecycle, we decided that our training pipeline must save the model it trained to a model registry.
 
-Using [this documentation](https://docs.kedro.org/en/stable/get_started/minimal_kedro_project.html),
-as well as everything we have learnt so far,do _just enough_ to turn this project into a Kedro project.
+Implement that feature with a TDD approach.
+
+## Exercise 4: Model evaluation
+
+Once models are trained, they need to be evaluated. To perform evaluation,
+we first need to retrieve the trained model from the model registry. Enable that feature with a TDD approach.
+
+## Exercise 5: Concrete MLFlow model registry
+
+Implement an **actual** model registry using the `mlflow` distribution package.
+
+## Bonus: Create a Poetry script to facilitate training pipeline execution
+
+Using Poetry `scripts` feature, create a command named `train` that runs the training
+pipeline command **defined** in [training_pipeline.py](./credit_default_prediction/training_pipeline.py)
+
+## Bonus: Add missing tests
+
+Write tests for any important aspect of the project that is not tested
